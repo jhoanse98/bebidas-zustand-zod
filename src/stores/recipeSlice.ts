@@ -6,9 +6,11 @@ export type RecipesSliceType = {
     categories: Categories
     drinks: Drinks
     selectedRecipe: Recipe
+    modal: boolean
     fetchCategories: () => Promise<void>
     searchRecipes: (SearchFilter: SearchFilter) => Promise<void>
     selectRecipe: (id: Drink['idDrink']) => Promise<void>
+    closeModal: () => void
 }
 
 export const createRecipesSlice: StateCreator<RecipesSliceType> = (set) => ({
@@ -25,6 +27,7 @@ export const createRecipesSlice: StateCreator<RecipesSliceType> = (set) => ({
             categories
         })
     },
+    modal: false,
     searchRecipes: async (filters) => {
         const drinks = await getRecipes(filters);
         set({
@@ -34,7 +37,14 @@ export const createRecipesSlice: StateCreator<RecipesSliceType> = (set) => ({
     selectRecipe: async (id) => {
         const selectedRecipe = await getRecipeById(id)
         set({
-            selectedRecipe
+            selectedRecipe,
+            modal: true
+        })
+    },
+    closeModal: () => {
+        set({
+            modal: false,
+            selectedRecipe: {} as Recipe
         })
     }
 
